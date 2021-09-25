@@ -81,7 +81,12 @@ async function changeStatusCar(id, data) {
     }
 
     const props = [];
-    for (const key in data) props.push(`${key}='${data[key]}'`);
+    for (const key in data) {
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
+        props.push(`${key}='${data[key]}'`);
+      }
+    }
+
     const cmd = `Update cars set ${props.join(',')} where id = $1`;
     await db.query(cmd, [id]);
 
@@ -92,7 +97,7 @@ async function changeStatusCar(id, data) {
   } catch (err) {
     return {
       code: 500,
-      data: `Error while adding car. Error: ${err.message}`,
+      data: `Error while editing car. Error: ${err.message}`,
     };
   }
 }
